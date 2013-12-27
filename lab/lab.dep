@@ -1,0 +1,4 @@
+client: ids_int fw ids_dmz siem
+internet: ids_int fw ids_dmz siem
+dmz: ids_int fw ids_dmz siem
+siem: ids_int ids_dmz fw

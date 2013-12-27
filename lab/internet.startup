@@ -1,0 +1,2 @@
+ifconfig eth0 70.200.136.10 netmask 255.255.255.0
+route add -net default gw 70.200.136.20
