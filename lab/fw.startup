@@ -5,3 +5,20 @@ ifconfig eth2 192.168.2.20 netmask 255.255.255.0
 route add -net 192.168.0.0 netmask 255.255.255.0 gw 192.168.1.10
 route add -net 192.168.3.0 netmask 255.255.255.0 gw 192.168.2.10
 
+iptables -F
+iptables -Z
+
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP
+
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+
+
+# On redirige les requêtes du port 80 vers la DMZ
+iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.3.5
+# On masque l'IP de ma DMZ âr l'IP publique du FW
+iptables -t nat -A POSTROUTING -s 192.168.3.5 -j SNAT
+
+
