@@ -3,7 +3,7 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[francais]{babel} 
-\usepackage[top=2cm, bottom=3cm, left=2cm, right=2cm, includeheadfoot]{geometry} %pour les marges
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm, includeheadfoot]{geometry} %pour les marges
 \usepackage{lmodern}
 \usepackage{graphicx} % Required to insert images
 \usepackage{tikz}
@@ -69,6 +69,24 @@
            shorten <=1pt,
            shorten >=1pt,
            blue!100}
+}
+
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc, shadings, shadows, shapes.arrows,shapes.multipart,decorations.pathreplacing,shapes.symbols}
+\usetikzlibrary{trees,shapes.geometric,arrows,decorations.pathmorphing,backgrounds,fit,positioning,shapes.symbols,chains        }
+\tikzset{%
+  interface/.style={draw, rectangle, rounded corners, font=\LARGE\sffamily},
+  ethernet/.style={interface, fill=yellow!50, font=\tiny},% ethernet interface
+  serial/.style={interface, fill=green!70},% serial interface
+  network/.style={sloped, anchor=south, font=\footnotesize\sffamily, color=black!50!green,outer sep=.2cm},% line speed at edge
+  network2/.style={anchor=east, font=\tiny\sffamily, color=black!50!green},% line speed at edge
+  networkname/.style={sloped, anchor=north, font=\tiny\sffamily, color=black!50!green},% line speed at edge
+  networkname2/.style={anchor=west, font=\tiny\sffamily, color=black!50!green},% line speed at edge
+  route/.style={draw, shape=single arrow, single arrow head extend=4mm,
+    minimum height=1.7cm, minimum width=3mm, white, fill=gray!20,
+    drop shadow={opacity=.8, fill=gray!50!black}, font=\tiny},% inroute / outroute arrows
+  address/.style={color=red, font=\small\sffamily}
 }
 
 \usepgflibrary{arrows} % for pgf-umlsd
@@ -140,7 +158,7 @@
 \tableofcontents
 \clearpage
 %--------------------------------------------------
-\section{Présentation Générale des systèmes de détection d'intrusion}
+\section{Présentation générale des systèmes de détection d'intrusion}
 Un IDS (Intrusion Detection System) a pour but de surveiller, contrôler et détecter les attaques potentielles sur un réseau ou une machine. 
 Ce système est essentiellement composé d’un sniffer\footnotemark[1] associé à un moteur qui analyse le trafic selon des règles pré-établies dans des fichiers de configuration.
 En effet, ce système de détection est, de nos jours, devenu indispensable au sein d’une architecture informatique sécurisée.
@@ -369,7 +387,7 @@ Il existe un système d’activation/désactivation d’autres règles au bout d
 \section{Suricata}
 \begin{center}\includegraphics[width=4cm]{icons/suricata.jpg}\end{center}
 
-\subsection{Introduction à Suricata}
+\subsection{Introduction}
 
 Suricata est un IDS/IPS open source soutenu par The Open Information Security Foundation (OISF). Il est compatible avec Snort mais est également son concurrent direct. Voici une liste des fonctionnalités qui difèrent avec Snort :
 
@@ -508,12 +526,171 @@ Une autre fonctionnalité intéressante est l’analyse de handshake TLS. Plusie
 
 On peut ainsi vérifier que les employés d’une entreprise utilisent bien des certificats fournis par la PKI de l’entreprise. 
 
+\newpage
+%-------------------------------------------------
+\section{Snorby}
 
+Snorby est une application qui apporte une interface web afin de faire du monitoring sur les logs générés par les IDS comme Snort ou Suricata. La gestion des logs devient alors beaucoup plus simple, rapide et plus efficace. Cette application permet entre autre de :
+\begin{itemize}
+	\item visualiser en temps réel les détection des outils IDS (snort, suricata)
+	\item afficher le détail de chaque log (visualiser l’adresse IP source, le contenu des paquets …)
+	\item générer des diagrammes sur les types d’attaque, les fréquences de chaque attaque …
+	\item générer des PDF, exporter des données (fichier csv par exemple)
+	\item ajouter des règles de classification sur les détections
+	\item envoyer des notifications par mail (voir directement sur le smartphone via l’application iOS)
+\end{itemize}
+A noter que Snorby est 100\% Open Source et est en permanence maintenu et développé par une équipe professionnelle. Snorby est à l’origine une création Dustin Webber; mais est maintenant attaché à l’entreprise "Threat Stack" dont Dustin Webber est le co-fondateur.
+
+\begin{center}
+\includegraphics[width=12cm]{icons/Snorby.png}
+\end{center}
+
+
+\newpage
 %-------------------------------------------------
 \section{Prélude}
 
+\begin{center}\includegraphics{icons/prelude-logo.png}\end{center}
+
+\subsection{Introduction}
+Prelude est un SIEM (Security Information and Event Management) qui a pour rôle de gérer les évènements du système d’information. C’est donc une solution de supervision de sécurité. Prelude collecte, filtre, normalise, corrèle, stocke et archive tous les événements de sécurité indépendamment des types d’équipements surveillés issues du système d'information. Au-delà de sa capacité de traitement de tous types de journaux d’événements (logs système, syslog, fichiers, etc.), Prelude est nativement compatible avec de nombreuses sondes anti-intrusion. Les informations collectées par Prelude sont donc récupérées au préalable par le système, le réseau ou des sondes comme Snort et Suricata par exemple. 
+On parle de corrélation car ces solutions sont munies de moteurs de corrélation qui permettent de relier plusieurs évènements à une même cause. Grâce à cette corrélation, certains évènements système ou réseaux, qui détectés sépararément auraient générés qu’une alerte mineur, peuvent être mis en relation et de ce fait générer une alerte majeur pour la sécurité du système d’information.
+Donc a partir de l'ensemble de ces informations Prelude peut fournir une vision globale du niveau de sécurité du système et ainsi prévenir les attaques, intrusions et autre infection virale. 
+
+\begin{center}\includegraphics[width=17cm]{icons/Prelude-Archi-Market-2a.png}\end{center}
+
+\subsection{Fonctionnalités}
+
+Les diférentes étapes opérées par Prelude:
+\paragraph{Collecte} Prelude collecte ces informations depuis le SI par le biais des journaux système (pare feux, routeurs, serveurs, bases de données …) ou depuis des sondes (Snort, Suricata, Bro…). Nativement il prend en compte différents formats (syslog, Traps SNMP, fichiers plats, OPSEC, formats propriétaires, etc.) ou encore le format IDMEF (Intrusion Detection Message Exchange Format). Ce dernier est par exemple utilisable pour stocker les informations recueillies par Snort.
+
+\paragraph{Sélection} Prelude utilise des critères de sélection sur les informations collectées en fonction du type, du niveau de l’alerte, de la source etc …
+
+\paragraph{Normalisation} Les traces brutes sont stockées sans modification pour garder leur valeur juridique, c’est à dire utilisables en cas de litige avec les personnes responsables de l’attaque par exemple. Ces traces sont généralement copiées puis normalisées sous un format plus lisible. En effet, la normalisation permet de faire des recherches mutli-critères, sur un champ ou sur une date. Ce sont ces évènements qui seront enrichis avec d'autres données puis envoyés vers le moteur de corrélation.
+
+\paragraph{Corrélation} Les règles de corrélation permettent d'identifier un évènement qui a causé la génération de plusieurs alertes en amont sur le système. Cette corrélation permet de cibler plus précisément une attaque, une intrusion ou encore une attaque virale en regroupant plusieurs informations issues de différents outils du SI ou des sondes.
+~~\\
+
+Une fois les informations collectées, normalisées et mis en relation, Prelude va archiver, analyser et générer des alertes.
+\paragraph{Archivage} Prelude collecte l'ensemble des journaux du système d'information, les stocke et les indexe dans une base de données. Il offre ainsi aux opérateurs des moyens de recherche dans ces journaux lors des audits de sécurité.
+
+\paragraph{Analyse} Prelude propose des interfaces d'analyse avancées et graphiques sur l'ensemble des données temps réel et archivées pour assister les opérateurs dans leurs travaux d'analyse. Ce module permet de générer des rapports dans divers formats, par exemple à destination des directions de l'entreprise.
+
+\paragraph{Alerte} Prelude collecte, analyse et corrèle l'ensemble des informations du système et en extrait les événements suspicieux en temps réels pour alerter les opérateurs d'une éventuelle intrusion.
+
+\subsection{À propos}
+En France, la revue bimestrielle MISC est le magazine de référence en matière de sécurité informatique. Chacun des numéros possède un dossier, c’est à dire un ensemble d’articles traitant d’un sujet précis. Le dossier du numéro 69, publié le 30 Août 2013, est dédié aux SIEM et à la détection d’intrusions. Le sujet d’un article est "SIEM/IDS : L’union fait-elle la force ?". Cet article tente de répondre à cette question afin de montrer si la mise en place et la gestion d’un SIEM est réellement un avantage au sein de processus de détection d’intrusions. Cette étude à été faite en observant plusieurs sondes IDS en action lors de la détection d’une attaque web ciblée : l’exploitation d’une faille de type LFI (Local File Inclusion) identifié par une CVE. Dans un premier temps l’étude détecte l’exploitation de cette faille au niveau réseau avec Snort, puis au niveau du système avec OSSEC et présente les avantages de chacun des ses IDS, mais aussi leurs inconvénients. Cette étude propose ensuite les possibilités de corrélation de évènements au travers d’un SIEM, OSSIM, afin d’obtenir des alertes de sécurité plus précises. En conclusion, cela permet de montrer qu’un SIEM a des avantages et facilite la gestion des évènements de sécurité qui surviennent sur un SI, malgré que son utilisation ne résolve pas tous les problèmes de la détection d’intrusions.
 
 
+\section{Démonstration de Snort}
+
+Pour illustrer ce rapport, nous avons mis en place le réseau suivant :
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+%% NODES
+\node (client) {\includegraphics[width=1cm]{icons/computer}};
+
+\node[right=of client] (idsint) {\includegraphics[width=.75cm]{icons/server}};
+
+\node[right=of idsint] (routeur) {\includegraphics[width=1.25cm]{icons/router}};
+
+\node[draw, cloud, cloud puffs = 10, cloud, minimum width=1.5cm,minimum height=1cm,below=of routeur] (cloud) {};
+
+\node[right=of routeur] (idsdmz) {\includegraphics[width=.75cm]{icons/server}};
+\node[right=of idsdmz] (dmz) {\includegraphics[width=.75cm]{icons/server}};
+
+%% NETWORKS
+\draw[thick] (client) -- node[ethernet, at start]{eth0} node[ethernet, at end]{eth1} (idsint) node[network,midway] {192.168.0.0};
+
+\draw[thick] (idsint) -- node[ethernet, at start]{eth0} node[ethernet, at end]{eth1} (routeur) node[network,midway] {192.168.1.0};
+
+\draw[thick] (routeur) -- node[ethernet, at start]{eth2} node[ethernet, at end]{eth0} (idsdmz) node[network,midway] {192.168.2.0};
+
+\draw[thick] (idsdmz) -- node[ethernet, at start]{eth1} node[ethernet, at end]{eth0} (dmz) node[network,midway] {192.168.3.0};
+
+\draw[thick] (routeur) -- node[ethernet, at start]{eth0} (cloud);
+
+%%LABELS
+\node at (0,-1) {Client};
+\node at (3.1,-1) {IDS int};
+\node at (9.7,-1) {IDS DMZ};
+\node at (12.7,-1) {DMZ};
+
+\node at (6.4,1) {Routeur/Pare-feu};
 
 
+%% ADDRESSES
+\node[address] at (.7,-.5) {.5};
+\node[address] at (2.4,-.5) {.254};
+\node[address] at (3.8,-.5) {.10};
+\node[address] at (5.3,-.5) {.20};
+\node[address] at (7.4,-.5) {.20};
+\node[address] at (9,-.5) {.10};
+\node[address] at (10.4,-.5) {.254};
+\node[address] at (12,-.5) {.5};
+\end{tikzpicture}
+\end{center}
+
+Nous avons réfléchi sur cinq scénarios attaquant la DMZ. Les attaques seront toutes effectuées depuis le client pour simplifier la compréhension des attaques.
+
+Les règles se trouvent sur l'IDS DMZ dans le fichier /etc/snort/rules/demo.rules
+
+\subsection{Scan de ports}
+
+Premièrement, nous souhaitons détecter des scan de nmap qui utilise le protocole ICMP pour faire des scans. Pour cela, nous mettons en place la règle suivante :
+
+\begin{Verbatim}
+alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"DEMO-ATTACKS Scan NMAP"; \
+dsize: 0; sid:7348;)
+\end{Verbatim}
+
+La seule différence avec un ping, c'est que la taille des données est vide (dsize à 0).
+
+\newpage
+\subsection{Injection SQL dans l'URL}
+
+Pour tester l'alerte d'injection, nous avons écrit une petite règle qui détecte les URLs contenant le motif \verb+OR 1=1+ qui est souvent utilisé dans les injections SQL de base :
+
+\begin{Verbatim}
+alert tcp any any -> $HTTP_SERVERS $HTTP_PORTS (msg:"DEMO-ATTACKS SQL injection"; \
+uricontent:"OR 1=1"; \sid:6969;)
+\end{Verbatim}
+
+Le champs \verb+uricontent+ est inspecté à la recherche du motif.
+
+\subsection{Injection XSS}
+
+Pour cette attaque, nous testons si le client envoie dans le contenu du paquet le motif \verb+<script+ pour détecter les injections :
+
+\begin{Verbatim}
+alert tcp any any -> $HTTP_SERVERS $HTTP_PORTS (msg:"DEMO-ATTACKS XSS attack"; \
+content:"<script"; sid:7373;)
+\end{Verbatim}
+
+Ici, c'est le champs \verb+content+ qui nous permet d'analyser le contenu du paquet et d'y rechercher le motif d'injection XSS.
+
+\subsection{Erreurs 403}
+
+Les erreurs 403 sont dangeureuses car elles indiquent à l'attaquand que la ressource existe mais qu'il n'y a pas accès. Il est alors important de journaliser cet événement au cas où l'attaquand réussirait une attaque ultérieure. Pour cela, il faut analyse le trafic sortant du site web :
+
+\begin{Verbatim}
+alert tcp $HTTP_SERVERS $HTTP_PORTS -> $EXTERNAL_NET any ( \
+msg:"DEMO-ATTACKS 403 Forbidden"; content:"HTTP/1.1 403"; sid:73421;)
+\end{Verbatim}
+
+On repère les erreurs 403 en analysant simplement le contenu de la page avec le champs \verb+content+.
+
+\subsection{Fuite de /etc/passwd}
+
+On souhaite maintenant journaliser les tentatives d'accès au fichier /etc/passwd. Pour cela, nous analysons l'URI et le contenu du paquet :
+
+\begin{Verbatim}
+alert tcp any any -> $HTTP_SERVERS $HTTP_PORTS (msg:"DEMO-ATTACKS /etc/passwd"; \
+uricontent:"/etc/passwd"; content:"/etc/passwd"; sid:8455;)
+\end{Verbatim}
+
+\section{Ressources}
+
+Les documents et le lab NetKit de ce projet sont disponibles sur le dépôt git : \url{http://github.com/legrajul/projet_reseau}
 \end{document}

@@ -4,7 +4,7 @@ route add -net default gw 192.168.2.20
 
 if [ ! -f /etc/snort/rules/demo.rules ]
 then
-	echo "alert icmp \$EXTERNAL_NET any -> \$HOME_NET any (msg:\"DEMO-ATTACKS Scan NMAP\"; sid:7348;)" > /etc/snort/rules/demo.rules
+	echo "alert icmp \$EXTERNAL_NET any -> \$HOME_NET any (msg:\"DEMO-ATTACKS Scan NMAP\"; dsize:0; sid:7348;)" > /etc/snort/rules/demo.rules
 	echo "alert tcp any any -> \$HTTP_SERVERS \$HTTP_PORTS (msg:\"DEMO-ATTACKS SQL injection\"; uricontent:\"OR 1=1\"; sid:6969;)" >> /etc/snort/rules/demo.rules
 	echo "alert tcp any any -> \$HTTP_SERVERS \$HTTP_PORTS (msg:\"DEMO-ATTACKS XSS attack\"; content:\"<script\"; sid:7373;)" >> /etc/snort/rules/demo.rules
 	echo "alert tcp \$HTTP_SERVERS \$HTTP_PORTS -> \$EXTERNAL_NET any (msg:\"DEMO-ATTACKS 403 Forbidden\"; content:\"HTTP/1.1 403\"; sid:73421;)" >> /etc/snort/rules/demo.rules
