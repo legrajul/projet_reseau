@@ -1,0 +1,4 @@
+POST /index.html HTTP/1.0
+Content-Length: 31
+
+<script>alert("toto")</script>
