@@ -222,6 +222,7 @@ Il permet de détecter les attaques non-filtrées par le firewall, le log de tou
 \section{Snort}
 \begin{center}\includegraphics[width=5cm]{icons/LogoSnort.jpg}\end{center}
 
+\subsection{Introduction}
 Pour ce projet, nous avons décidé d’utiliser Snort car c’est un des plus utilisé avec Suricata, qu’il peut faire IDS/IPS et aussi parce qu’il est installé par défaut sur netkit (réseau virtuel que nous allons utiliser pour simuler les attaques).
 Snort est un IDS open source conçu en 1998 par  Marty Roesh qui a été racheté par la suite par SourceFire.
 C’est le logiciel le plus utilisé (plus de 2 millions de téléchargements) et il est très souvent mis-à-jour.
@@ -230,6 +231,7 @@ C’est le logiciel le plus utilisé (plus de 2 millions de téléchargements) e
 Il peut interagir avec le firewall pour bloquer des intrusions (mode IPS) à l’aide de différents plugins. Bien évidemment, il est paramètrable et on peut donc ajouter des règles nous-mêmes.
 Le petit bémol est qu’il ne gère pas l’envoi de mails ou de SMS pour prévenir d’éventuelles attaques. Pour ce faire, on peut bien sur utiliser d’autres logiciels en complément.
 
+\subsection{Fonctionnalités}
 Snort se décompose en plusieurs blocs :
 \begin{itemize}
 \item le décodeur de paquets, qui récupère des paquets de différentes interfaces réseau et prépare les paquets pour passer dans le préprocesseur.
@@ -310,7 +312,7 @@ Le plus souvent il s’agit de "->" qui signifie que le trafic contrôlé ira de
 Mais il existe aussi l’opérateur "<>" qui signifie que le trafic contrôlé sera dans les deux sens tant qu’il est entre ces deux adresses.
 Il n’existe pas d’opérateur "<-" car il est inutile et pourrait amener des erreurs.
 
-
+\subsection{Fonctionnalités avancées}
 Il existe quatre catégories principales pour les options de règles :
 \begin{itemize}
 \item general : donne simplement de l’information.
