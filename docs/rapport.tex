@@ -1,0 +1,517 @@
+\documentclass[a4paper,11pt,french]{article}
+\usepackage[utf8]{inputenc}
+
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel} 
+\usepackage[top=2cm, bottom=3cm, left=2cm, right=2cm, includeheadfoot]{geometry} %pour les marges
+\usepackage{lmodern}
+\usepackage{graphicx} % Required to insert images
+\usepackage{tikz}
+\usepackage{fancyhdr}   % Required for custom headers
+\usepackage{lastpage}   % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage{graphicx}   % Required to insert images
+\usepackage{tabularx, longtable}
+\usepackage{color, colortbl}
+\usepackage[toc,page]{appendix} 
+\usepackage{pgfplots}
+\usepackage{eurosym}
+\usepackage{rotating}
+\usepackage{array}
+\usepackage{cmbright}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyvrb}
+\RecustomVerbatimEnvironment
+{Verbatim}{Verbatim}
+{gobble=0,frame=single,numbers=left,numbersep=2mm
+}
+\geometry{a4paper,textwidth=17cm,textheight=27cm} 
+
+\usetikzlibrary{trees,shapes.geometric,arrows,decorations.pathmorphing,backgrounds,fit,positioning,shapes.symbols,chains	}
+ \tikzset{
+    %Define standard arrow tip
+    >=stealth',
+    %Define style for boxes
+    punkt/.style={
+           rectangle, dashed,
+           rounded corners,
+           draw=black, very thin,
+           minimum height=2em,
+           minimum width = 2cm,
+           text centered},
+    square/.style={
+           rectangle,
+           draw=black, thick,
+           minimum height=.5cm,
+           minimum width = 1cm,
+           text centered},
+    data/.style={
+           rectangle,
+           draw=black, thick,
+           minimum height= 2cm,
+           minimum width = 2cm,
+           text centered},
+    % Define arrow style
+    pil/.style={
+           ->,
+           thick,
+           shorten <=1pt,
+           shorten >=1pt,},
+    asym/.style={
+           <->,
+           thin,
+           shorten <=1pt,
+           shorten >=1pt,
+           red!100},
+    sym/.style={
+           <->,
+           thin,
+           shorten <=1pt,
+           shorten >=1pt,
+           blue!100}
+}
+
+\usepgflibrary{arrows} % for pgf-umlsd
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\textbf{\hmwkClass -- \hmwkSubject \\ \hmwkTitle \\ \hmwkDocName}} % Top left header
+\rhead{\includegraphics[width=10em]{logo_univ.png}}
+\lfoot{\lastxmark} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Page\ \thepage\ / \pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength{\headheight}{40pt}
+
+\newcommand{\hmwkTitle}{Systèmes de détection d'intrusion} % Assignment title
+\newcommand{\hmwkClass}{Master 2 SSI } % Course/class
+\newcommand{\hmwkAuthorName}{Julien Bourdon, Julien Legras et Jean-Baptiste Souchal} % Your name
+\newcommand{\hmwkSubject}{Administration réseaux} % Subject
+\newcommand{\hmwkDocName}{Rapport de projet} % Document name
+
+\newcommand{\version}{X} % Document version
+\newcommand{\docDate}{17 janvier 2014} % Document date
+\newcommand{\checked}{Djelloul Ziadi} % Checker name
+\newcommand{\approved}{X} % Approver name
+
+\newcommand{\fancyfootnotetext}[2]{%
+  \fancypagestyle{dingens}{%
+    \fancyfoot[LO,RE]{\parbox{12cm}{\footnotemark[#1]\footnotesize #2}}%
+  }%
+  \thispagestyle{dingens}%
+}
+\setlength{\headheight}{40pt}
+
+
+\definecolor{gris}{rgb}{0.95, 0.95, 0.95}
+
+\author{\hmwkAuthorName}
+\date{} % Insert date here if you want it to appear below your name
+
+
+\begin{document}
+\pagestyle{fancy}
+
+\vspace*{6cm}
+\begin{center}\textbf{\Huge{\hmwkDocName\\\hmwkTitle}}\end{center}
+\vspace*{8cm}
+	
+\begin{center}
+\fcolorbox{black}{gris}{
+\begin{minipage}{15cm}
+\begin{tabularx}{15cm}{lXl}
+	\bfseries{Date de rendu} & & \docDate\\
+	& & \\
+	\bfseries{Rédigé par} & & \hmwkAuthorName \\
+	& & \\
+	\bfseries{À l'attention de} & & \checked \\
+\end{tabularx}
+\end{minipage}
+}
+\end{center}
+
+\newpage
+
+\clearpage
+\tableofcontents
+\clearpage
+%--------------------------------------------------
+\section{Présentation Générale des systèmes de détection d'intrusion}
+Un IDS (Intrusion Detection System) a pour but de surveiller, contrôler et détecter les attaques potentielles sur un réseau ou une machine. 
+Ce système est essentiellement composé d’un sniffer\footnotemark[1] associé à un moteur qui analyse le trafic selon des règles pré-établies dans des fichiers de configuration.
+En effet, ce système de détection est, de nos jours, devenu indispensable au sein d’une architecture informatique sécurisée.
+
+
+L'IDS peut analyser trois couches :
+\begin{itemize}
+\item couche Réseau (IP, ICMP)
+\item couche Transport (TCP, UDP)
+\item couche Application (HTTP, Telnet)
+\end{itemize}
+
+
+Il existe deux types d’IDS :
+\paragraph{Le HIDS (Host IDS)} qui est directement placé sur un ordinateur hôte pour surveiller le système et ses applications. Ce type de système est très utile pour s’assurer qu’une machine n’est pas infectée.
+\paragraph{Le NIDS (Network IDS)} qui est une sonde placée sur le réseau pour surveiller ce dernier dans son ensemble. Il capture tout le trafic et l’analyse pour rechercher les paquets suspects.
+
+
+Le problème réside dans le fait que certains paquets considérés comme suspects ne le sont en fait pas : les \emph{faux-positifs}.
+À l’inverse, des paquets malveillants peuvent passer sans être détéctés par la sonde, ce sont des \emph{faux-négatifs}.
+Ces faux-négatifs utilisent une technique appelée Evasion pour ne pas être repéré par la sonde.
+
+
+Selon le type de trafic analysé, l’IDS peut faire différentes actions :
+\begin{itemize}
+\item journaliser l’événement (source d’information et vision des menaces courantes)
+\item avertir un système avec un message (appel SNMP)
+\item avertir un humain avec un message (courrier électronique, SMS, interface web, etc.)
+\item amorcer certaines actions sur un réseau ou hôte (mettre fin à une connexion réseau, ralentir le débit des connexions, etc.)
+\end{itemize}
+
+Les méthodes de détection se distinguent en deux grandes familles : par signature ou comportementale.
+
+
+La méthode de détection par signature est la plus simple car elle est basée sur la reconnaissance de schémas connus par expressions régulières.
+Chaque attaque connue a sa signature associée stockée dans une base de données.
+Ces signatures sont comparées systématiquement à celles des paquets qui transitent.
+On a donc peu de faux-positifs mais il faut forcément que l’attaque soit connue pour être détectée. Cela implique une maintenance régulière de la base de données.
+La grosse faiblesse est que l’utilisation de techniques d’evasion incapacite totalement ce type de défense.
+
+La famille comportementale utilise deux méthodes différentes : la détection d’anomalie ou la vérification d’intégrité.
+
+Pour la détection d’anomalie, on considère qu’un comportement qui diffère du comportement "normal" du système est suspect. Une attaque inconnue peut tout de même être détectée grâce à ce mécanisme.
+Pour décrire un comportement normal, il faut créer un profil.
+Ce profil a plusieurs caractéristiques (volume des échanges réseaux, appels systèmes, commandes usuelles, etc.) et repose sur plusieurs outils assez complexes.
+Cette méthode est difficile à tromper, permet la détection d’attaques jusqu’alors inconnues et donc de créer de nouvelles règles pour les contrer.
+Mais malheureusement, le taux de faux-positifs est trop important et la mise en place d’un profil est longue et difficile.
+
+
+Pour la vérification d’intégrité, le principe est de générer une somme de contrôle sur les fichiers du système. Cette somme est ensuite comparée à un instant T pour vérifier qu’il n’y a pas eu de modifications importantes. C’est une des méthodes les plus employées car elle est simple et efficace.
+
+
+Pour résumer, les IDS sont évidemment devenus indispensables mais il y a encore de nombreux points négatifs.
+En effet, c’est une technologie complexe qui nécessite un degré d’expertise assez élevé.
+De plus, pour le rendre le plus optimisé possible, il faut beaucoup de temps.
+On peut dire que les IDS sont promis à un avenir radieux mais que cet avenir n’est pas encore arrivé.
+
+
+Un IPS (Intrusion Prevention System) est un IDS à qui on ajoute des fonctionnalités de blocage, on l’appelle aussi IDS actif.
+Son but peut être d'interrompre ou de ralentir une connexion mais aussi de blacklister les sources dangereuses grâce à un firewall et à un proxy.
+
+
+Le souci qui peut provenir d’un IPS est qu’un faux-positif va être bloqué immédiatement et peut donc paralyser le réseau.
+
+
+On peut placer un IDS/IPS à plusieurs endroits où leur rôle diffère :
+\paragraph{Entre internet et le firewall (Honey Pot)}
+C’est une machine ou un programme volontairement vulnérable destiné à attirer et à piéger les pirates qui sert à occuper et garder la trace de ce pirate mais qui donne également des informations sur de nouvelles attaques. En effet, vu la quantité de trafic qui passe par lui, il serait quasiment impossible de loger toutes les informations qui transitent.
+\paragraph{Entre le firewall et la DMZ}
+Il permet de détecter les attaques non-filtrées par le firewall, le log de tout ce qui passe peut être réalisé sans problème et donne donc des informations claires.
+\paragraph{Entre le firewall et le réseau interne} L’un des plus importants car on sait qu’environ 80\% des attaques proviennent de l’intérieur (trojans, virus…).
+
+
+
+\fancyfootnotetext{1}{Un sniffer est un logiciel capable de capturer, lire et enregistrer les paquets qui transitent sur le réseau.}
+
+\newpage
+%-------------------------------------------------
+\section{Snort}
+\begin{center}\includegraphics[width=5cm]{icons/LogoSnort.jpg}\end{center}
+
+Pour ce projet, nous avons décidé d’utiliser Snort car c’est un des plus utilisé avec Suricata, qu’il peut faire IDS/IPS et aussi parce qu’il est installé par défaut sur netkit (réseau virtuel que nous allons utiliser pour simuler les attaques).
+Snort est un IDS open source conçu en 1998 par  Marty Roesh qui a été racheté par la suite par SourceFire.
+C’est le logiciel le plus utilisé (plus de 2 millions de téléchargements) et il est très souvent mis-à-jour.
+
+
+Il peut interagir avec le firewall pour bloquer des intrusions (mode IPS) à l’aide de différents plugins. Bien évidemment, il est paramètrable et on peut donc ajouter des règles nous-mêmes.
+Le petit bémol est qu’il ne gère pas l’envoi de mails ou de SMS pour prévenir d’éventuelles attaques. Pour ce faire, on peut bien sur utiliser d’autres logiciels en complément.
+
+Snort se décompose en plusieurs blocs :
+\begin{itemize}
+\item le décodeur de paquets, qui récupère des paquets de différentes interfaces réseau et prépare les paquets pour passer dans le préprocesseur.
+\item les préprocesseurs sont des composants qui peuvent modifier ou défragmentater les paquets de données avant que le moteur de détection fasse ses opérations pour découvrir si le paquet est utilisé par un intrus.
+\item le moteur de détection qui utilise l’algorithme AHO-CORASICK.
+\item le système d’alerte et d’enregistrement qui sert à prévenir et à loger les informations sur l’attaque.
+\item les modules de sortie qui permet d’envoyer tous les logs vers une base de données.
+\end{itemize}
+
+
+Voici un exemple de règle pour détecter une connexion avec le login root sur le port ftp :
+\begin{verbatim}
+alert tcp any any -> 192.168.1.0/24 21 (content: "USER root"; 
+                                        nocase; 
+                                        msg: "FTP root user access attempt";)
+\end{verbatim}
+
+Et voici un exemple d’une autre pour une connexion à un site non-autorisé :
+\begin{verbatim}
+alert tcp any any <> 192.168.1.0/24 any (content-list:"adults"; 
+                                         msg: "Adults list access attempt"; 
+                                         react: block;)
+\end{verbatim}
+
+Les règles commencent toujours par l’action qui va être lancée.
+
+
+En mode IDS, il y a 5 actions par défaut :
+\begin{itemize}
+\item alert : génère une alerte puis log le paquet.
+\item log : log seulement le paquet.
+\item pass : ignore le paquet et le laisse passer.
+\item activate : génère une alerte et active une règle dynamique.
+\item dynamic : une fois activée par une règle de type activate, elle se comporte comme un log. Cela peut être très utile quand on veut récupérer le contenu d’un buffer-overflow pour voir quelles données sensibles ont été touchées. 
+\end{itemize}
+
+
+En ajoutant le mode inline de Snort (IPS), on ajoute ces 3 règles de protection :
+\begin{itemize}
+\item drop : bloque et log le paquet.
+\item reject : en plus de faire ce que les règles drop font, elle envoie un "TCP reset" pour les connexions TCP ou un "ICMP port unreachable" pour les connexions UDP. 
+\item sdrop : bloque le paquet mais ne le log pas.
+\end{itemize}
+
+On peut également créer nos propres types de règles qu’on pourra utiliser par la suite en tant qu’actions :
+\begin{Verbatim}
+ruletype redalert
+{
+type alert 
+ 	output alert_syslog: LOG_AUTH LOG_ALERT 
+    	output log_tcpdump: suspicious.log
+}
+\end{Verbatim}
+
+Ce nouveau type enverra des logs dans le \verb+syslog+ ainsi que sur \verb+tcpdump+.
+
+Ensuite, le deuxième champ spécifie le protocole, pour le moment on peut utiliser TCP, UDP, ICMP et IP. Dans des versions futures, il est possible qu’on voit apparaître ARP, IGRP, GRE, OSPF, RIP, IPX, etc….
+
+
+Ensuite, viennent les adresses IP (source puis destination). Le mot-clé "any" prendra toutes les adresses en considération. Par contre, une adresse unique devra être spécifiée comme ceci : "192.168.1.0/24".
+Pour mettre une liste d’adresses, on les met entre crochets et elles sont séparées par une virgule sans espaces.
+
+
+Au contraire, si l’on veut que tout le trafic à l’exception d’une adresse soit contrôlé, on pourra utiliser le caractère "!" devant l’adresse.
+
+
+Pour les ports qui suivent les deux adresses, il existe également le mot-clé "any".
+On peut également créer une sorte de "range" comme ceci (tout dépend du placement du caractère ":") :
+\begin{itemize}
+\item \verb+1:1024+ = les ports contrôlés iront de 1 à 1024.
+\item \verb+:1024+ = les ports contrôlés seront inférieurs ou égaux à 1024.
+\item \verb+1024:+ = les ports contrôlés seront supérieurs ou égaux à 1024.
+\end{itemize}
+
+
+Enfin pour finir, les deux adresses IP sont séparées par un opérateur.
+Le plus souvent il s’agit de "->" qui signifie que le trafic contrôlé ira de la source (à gauche) vers la destination (à droite).
+Mais il existe aussi l’opérateur "<>" qui signifie que le trafic contrôlé sera dans les deux sens tant qu’il est entre ces deux adresses.
+Il n’existe pas d’opérateur "<-" car il est inutile et pourrait amener des erreurs.
+
+
+Il existe quatre catégories principales pour les options de règles :
+\begin{itemize}
+\item general : donne simplement de l’information.
+\item payload : recherche dans les paquets qui ont une charge utile.
+\item non-payload : recherche dans les paquets qui n’ont pas de charge utile.
+\item post-detection : lance une autre règle à la suite d’une règle.
+\end{itemize}
+~~\\
+Pour les règles contenues dans "general" on a principalement :
+\begin{itemize}
+\item msg : sert à afficher un texte spécifique.
+\item reference : utilisé avec d’autres plugins pour plus d’information sur une attaque.
+\item gid : qui récupère l’id du générateur de Snort .
+\item sid : récupère l’id d’une règle.
+\item classtype : une attaque est rattachée à une classe d’attaque et cette classe est renvoyée.
+\item priority : chaque classe d’attaque a une priorité associée qu’on peut également redéfinir (high,medium,low)
+\end{itemize}
+
+Quelques exemples pour les règles "payload" : 
+\begin{itemize}
+\item content : Si le paquet contient les mots recherchés, alors il est repéré. Cette méthode est la plus utilisée et la plus efficace si elle est bien comprise.
+\item nocase : Enlève le casse, souvent associé à “content”.
+\item depth : Spécifie à quel niveau de profondeur Snort doit aller pour chercher les informations.
+\item offset : Spécifie à partir de quel endroit dans un pattern déja défini, la recherche doit commencer.
+\end{itemize}
+
+
+$\hookrightarrow$ Il existe en tout 45 règles qui sont principalement utilisées avec Content...\\
+
+
+Pour les "non-payload", on ne va pas rentrer dans le détail non plus mais voici quelques exemples : 
+\begin{itemize}
+\item ttl : compare le temps de trajet d’un paquet pour voir par où il est passé.
+\item id : pour repérer l’id d’une adresse IP (31337 très utilisé par les hackers)
+\item flags : chercher si un flag précis est présent dans le paquet (FIN, SYN, RST...)
+\end{itemize}
+
+$\hookrightarrow$ Il existe en tout 22 règles pour ce type.\\
+
+
+Pour les "post-detection" il n’y a pas beaucoup de règles mais elles sont importantes : 
+\begin{itemize}
+\item logto : envoie toutes les données dans un fichier spécifique (utile pour l’analyse).
+\item resp : qui kill la session d’où provient l’attaque.
+\item react : affiche une page web à l’attaquant et ferme la connexion.
+\item tag : ne garde pas que le paquet, mais log aussi les IP et host source/destination.
+\item detection-filter : en fonction de certains critères, l’action n’est lancée qu’au moment où tous ces critères ont été remplis (nombre de connexions ratées à la suite…)
+\end{itemize}
+
+Il existe un système d’activation/désactivation d’autres règles au bout d’un certains nombres de détections/protections.
+
+\newpage
+%-------------------------------------------------
+\section{Suricata}
+\begin{center}\includegraphics[width=4cm]{icons/suricata.jpg}\end{center}
+
+\subsection{Introduction à Suricata}
+
+Suricata est un IDS/IPS open source soutenu par The Open Information Security Foundation (OISF). Il est compatible avec Snort mais est également son concurrent direct. Voici une liste des fonctionnalités qui difèrent avec Snort :
+
+\begin{center}
+\begin{tabularx}{15cm}{|X|X|}
+\hline
+\textbf{Suricata}&\textbf{Snort}\\
+\hline
+Soutenu par une fondation  & Dévelopé par SourceFire\\
+Multithreadé & Multiprocessus\\
+IPS natif & IPS supporté\\
+Fonctions avancées (flowint, libHTP) & jeu de règles SO (performant mais fermé)\\
+Support de PF\_RING & Pas d'accélération matérielle\\
+Code moderne et modulaire &  Code vieillissant\\
+Jeune mais dynamique &  10 ans d'expérience\\
+\hline
+\end{tabularx}
+\end{center}
+
+$\hookrightarrow$ Comparaison plus complète : \url{http://www.aldeid.com/index.php/Suricata-vs-snort}
+
+
+\paragraph{PF\_RING} est une bibliothèque réseau open source permettant de capturer un flux réseau sur un lien à haut débit (>1Gbps). Une fois ce trafic capturé, il est possible de l’analyser et/ou le manipuler.
+
+\subsection{Fonctionnalités}
+
+Du fait de son jeune développement, Suricata est axé sur des fonctionnalités modernes telles que :
+\begin{itemize}
+\item support natif de l’IPv6
+\item multi-threadé
+\item accélération matérielle native (GPU, PF\_RING)
+\item IPS natif
+\end{itemize}
+\newpage
+Son architecture se décompose en une suite de modules de traitement. Chaque suite de traitement peut avoir sa propre architecture. Voici l’architecture en mode pcap automatique :
+\begin{center}
+\includegraphics[height=5.5cm]{icons/suricata_pcap_auto_pipeline_v1.png}
+\end{center}
+
+Suricata permet également un paramétrage fin des préférences CPU telles que :
+\begin{itemize}
+\item affectation d’un thread à un CPU
+\item affectation d’une famille de threads à un ensemble de CPU
+\item prise en compte des interruptions matérielles
+\end{itemize}
+
+Il existe différents modules d’entrées pour Suricata, qu’il soit en mode IDS ou IPS :
+
+\begin{center}
+\begin{tabularx}{16cm}{|X|X|}
+\hline
+\textbf{IDS}&\textbf{IPS}\\
+\hline
+PCAP (live, multiinterfaces, hors-ligne)  & NFQueue (cible iptables)\\
+PF\_RING & ipfw : pare-feu avec états pour systèmes BSD\\
+AF\_PACKET & \\
+\hline
+\end{tabularx}
+\end{center}
+
+
+En modules de sortie, Suricata nous propose :
+\begin{itemize}
+\item fastlog
+\item unified log (Barnyard 1 \& 2, format utilisé par Snort)
+\item HTTP log (log format Apache)
+\item Prelude 
+\end{itemize}
+
+
+Au niveau des signatures, Suricata supporte la quasi-totalité des signatures de Snort mais également des fonctionnalités exclusives utilisées par les rulesets comme VRT (Sourcefire Vulnerability Research Team)  ou Emerging Threats.
+
+
+Le support de l’accélération matérielle par Suricata s’effectue avec CUDA, l’architecture de calcul parrallèle dévéloppée par NVIDIA. Actuellement, Suricata a implémentaté un algorithme de matching en CUDA.
+
+
+\subsection{Fonctionnalités avancées}
+
+Suricata utilise la bibliothèque libHTP qui est un parseur orienté sécurité du protocole HTTP. Cette bibliothèque permet de faire du suivi de flux et est capable de décoder des flux compressés par GZip. Voici un exemple de règle pour un chat Facebook :
+
+\begin{Verbatim}
+
+alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS \
+(
+msg: "ET CHAT Facebook Chat (send message) " ; \
+flow : established,to_server ; content : "POST" ; http_method ; \
+content : \
+"/ajax/chat/send.php" ; http_uri; content : "facebook.com" ; http_header ; \
+classtype : policy-violation; reference : url, doc.emergingthreats.net/2010784; \
+reference : \
+url, www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/POLICY/POLICY_Facebook_Chat; \
+sid :2010784; rev: 4 ; \
+)
+\end{Verbatim}
+
+Cette signature teste :
+\begin{itemize}
+\item la méthode HTTP : POST
+\item la page : /ajax/chat/send.php
+\item le domaine : facebook.com
+\end{itemize}
+
+Suricata gère les variables de flux également, cela permet de détecter les attaques par étapes et de créer une machine à état au sein du flux (automate). Il existe deux types de variables de flux :
+
+\begin{center}
+\begin{tabularx}{16cm}{|X|X|}
+\hline
+\textbf{Flowbits}&\textbf{Flowint}\\
+\hline
+condition booléenne  & définition de compteur\\
+positionnement d’un drapeau & opération arithmétique\\
+\hline
+\end{tabularx}
+\end{center}
+
+Voici un exemple qui remonte une alerte si et seulement si usernamecount est plus grand que 5 :
+\begin{Verbatim}
+alert tcp any any -> any any (msg: "Counting Usernames" ; content : "jonkman" ; \
+flowint: usernamecount , + , 1 ; flowint: usernamecount , > , 5 ;)
+\end{Verbatim}
+
+Suricata supporte l’extraction et l’inspection de fichiers (uniquement transmis par HTTP) à l’aide de différents mots clefs :
+\begin{itemize}
+\item filemagic : description du contenu (“executable for MS Windows”, “JPEG image data”, “RSA private key”...)
+\item filestore : stockage du fichier pour inspection
+\item fileext : extension du fichier
+\item filename : nom du fichier
+\end{itemize}
+
+Une autre fonctionnalité intéressante est l’analyse de handshake TLS. Plusieurs mots clefs sont supportés :
+\begin{itemize}
+\item TLS.version : Correspondance avec le numéro de version du protocole
+\item TLS.subject : Correspondance sur le sujet du certificat
+\item TLS.issuerdn : Correspondance sur le nom du générateur de certificat
+\end{itemize}
+
+On peut ainsi vérifier que les employés d’une entreprise utilisent bien des certificats fournis par la PKI de l’entreprise. 
+
+
+%-------------------------------------------------
+\section{Prélude}
+
+
+
+
+
+\end{document}
