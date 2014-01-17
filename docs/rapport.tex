@@ -539,10 +539,11 @@ Snorby est une application qui apporte une interface web afin de faire du monito
 	\item ajouter des règles de classification sur les détections
 	\item envoyer des notifications par mail (voir directement sur le smartphone via l’application iOS)
 \end{itemize}
-A noter que Snorby est 100\% Open Source et est en permanence maintenu et développé par une équipe professionnelle. Snorby est à l’origine une création Dustin Webber; mais est maintenant attaché à l’entreprise "Threat Stack" dont Dustin Webber est le co-fondateur.
+
+A noter que Snorby est 100\% Open Source et est en permanence maintenu et développé par une équipe professionnelle. Snorby est à l’origine une création Dustin Webber; mais est maintenant attachée à l’entreprise "Threat Stack" dont Dustin Webber est le co-fondateur.
 
 \begin{center}
-\includegraphics[width=12cm]{icons/Snorby.png}
+\includegraphics[width=17cm]{icons/Snorby.png}
 \end{center}
 
 
@@ -553,16 +554,16 @@ A noter que Snorby est 100\% Open Source et est en permanence maintenu et dével
 \begin{center}\includegraphics{icons/prelude-logo.png}\end{center}
 
 \subsection{Introduction}
-Prelude est un SIEM (Security Information and Event Management) qui a pour rôle de gérer les évènements du système d’information. C’est donc une solution de supervision de sécurité. Prelude collecte, filtre, normalise, corrèle, stocke et archive tous les événements de sécurité indépendamment des types d’équipements surveillés issues du système d'information. Au-delà de sa capacité de traitement de tous types de journaux d’événements (logs système, syslog, fichiers, etc.), Prelude est nativement compatible avec de nombreuses sondes anti-intrusion. Les informations collectées par Prelude sont donc récupérées au préalable par le système, le réseau ou des sondes comme Snort et Suricata par exemple. 
-On parle de corrélation car ces solutions sont munies de moteurs de corrélation qui permettent de relier plusieurs évènements à une même cause. Grâce à cette corrélation, certains évènements système ou réseaux, qui détectés sépararément auraient générés qu’une alerte mineur, peuvent être mis en relation et de ce fait générer une alerte majeur pour la sécurité du système d’information.
-Donc a partir de l'ensemble de ces informations Prelude peut fournir une vision globale du niveau de sécurité du système et ainsi prévenir les attaques, intrusions et autre infection virale. 
+Prelude est un SIEM (Security Information and Event Management) qui a pour rôle de gérer les évènements du système d’informations. C’est donc une solution de supervision de sécurité. Prelude collecte, filtre, normalise, corrèle, stocke et archive tous les événements de sécurité indépendamment des types d’équipements surveillés issus du système d'informations. Au-delà de sa capacité de traitement de tous types de journaux d’événements (logs système, syslog, fichiers, etc.), Prelude est nativement compatible avec de nombreuses sondes anti-intrusion. Les informations collectées par Prelude sont donc récupérées au préalable par le système, le réseau ou des sondes comme Snort et Suricata par exemple. 
+On parle de corrélation car ces solutions sont munies de moteurs de corrélation qui permettent de relier plusieurs évènements à une même cause. Grâce à cette corrélation, certains évènements système ou réseaux, qui détectés sépararément auraient générés qu’une alerte mineur, peuvent être mis en relation et de ce fait générer une alerte majeure pour la sécurité du système d’informations.
+Donc a partir de l'ensemble de ces informations, Prelude peut fournir une vision globale du niveau de sécurité du système et ainsi prévenir les attaques, intrusions et autres infections virales. 
 
 \begin{center}\includegraphics[width=17cm]{icons/Prelude-Archi-Market-2a.png}\end{center}
 
 \subsection{Fonctionnalités}
 
-Les diférentes étapes opérées par Prelude:
-\paragraph{Collecte} Prelude collecte ces informations depuis le SI par le biais des journaux système (pare feux, routeurs, serveurs, bases de données …) ou depuis des sondes (Snort, Suricata, Bro…). Nativement il prend en compte différents formats (syslog, Traps SNMP, fichiers plats, OPSEC, formats propriétaires, etc.) ou encore le format IDMEF (Intrusion Detection Message Exchange Format). Ce dernier est par exemple utilisable pour stocker les informations recueillies par Snort.
+Les différentes étapes opérées par Prelude:
+\paragraph{Collecte} Prelude collecte ces informations depuis le SI par le biais des journaux système (pare feux, routeurs, serveurs, bases de données …) ou depuis des sondes (Snort, Suricata, Bro…). Nativement il prend en compte différents formats (syslog, Traps SNMP, fichiers plats, OPSEC, formats propriétaires, etc.) ou encore le format IDMEF (Intrusion Detection Message Exchange Format). Ce dernier est par exemple utilisable pour stocker les informations recueillies par Snort et Suricata.
 
 \paragraph{Sélection} Prelude utilise des critères de sélection sur les informations collectées en fonction du type, du niveau de l’alerte, de la source etc …
 
@@ -572,7 +573,7 @@ Les diférentes étapes opérées par Prelude:
 ~~\\
 
 Une fois les informations collectées, normalisées et mis en relation, Prelude va archiver, analyser et générer des alertes.
-\paragraph{Archivage} Prelude collecte l'ensemble des journaux du système d'information, les stocke et les indexe dans une base de données. Il offre ainsi aux opérateurs des moyens de recherche dans ces journaux lors des audits de sécurité.
+\paragraph{Archivage} Prelude collecte l'ensemble des journaux du système d'informations, les stocke et les indexe dans une base de données. Il offre ainsi aux opérateurs des moyens de recherche dans ces journaux lors des audits de sécurité.
 
 \paragraph{Analyse} Prelude propose des interfaces d'analyse avancées et graphiques sur l'ensemble des données temps réel et archivées pour assister les opérateurs dans leurs travaux d'analyse. Ce module permet de générer des rapports dans divers formats, par exemple à destination des directions de l'entreprise.
 
